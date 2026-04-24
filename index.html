@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaunchPad — Find Your Career Path</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg: #05050a;
+  --surface: #0e0e1a;
+  --card: #13131f;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f2f2f8;
+  --muted: rgba(242,242,248,0.5);
+  --c1: #ff6b6b;
+  --c2: #ffd93d;
+  --c3: #6bcb77;
+  --c4: #4d96ff;
+  --c5: #ff6fc8;
+  --c6: #a78bfa;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.page { display: none; }
+.page.on { display: block; }
+
+/* ─── SHARED BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: 50px; border: none;
+  font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-y { background: var(--c2); color: #111; }
+.btn-y:hover { box-shadow: 0 8px 32px rgba(255,217,61,0.35); }
+.btn-g { background: var(--card); color: var(--text); border: 1px solid var(--border2); }
+
+/* ═══════════════════════════════════
+   PAGE 1 — LANDING
+═══════════════════════════════════ */
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px;
+  background: rgba(5,5,10,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-size: 22px; font-weight: 900; }
+.nav-logo b { color: var(--c2); }
+.nav-sdg {
+  font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 50px;
+  background: rgba(107,203,119,0.12); color: var(--c3); border: 1px solid rgba(107,203,119,0.25);
+}
+.nav-cta {
+  background: var(--c2); color: #111; border: none;
+  padding: 10px 24px; border-radius: 50px;
+  font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800;
+  cursor: pointer; transition: transform 0.2s;
+}
+.nav-cta:hover { transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 120px 24px 60px;
+  position: relative; overflow: hidden;
+}
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(100px); pointer-events: none;
+  animation: floatOrb 12s ease-in-out infinite alternate;
+}
+.orb-a { width: 550px; height: 550px; background: rgba(255,107,107,0.16); top: -120px; left: -180px; }
+.orb-b { width: 480px; height: 480px; background: rgba(77,150,255,0.14); top: 80px; right: -120px; animation-delay: -5s; }
+.orb-c { width: 400px; height: 400px; background: rgba(167,139,250,0.12); bottom: -80px; left: 35%; animation-delay: -9s; }
+@keyframes floatOrb { from{transform:translate(0,0) scale(1)} to{transform:translate(40px,25px) scale(1.07)} }
+
+.hero-live {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(107,203,119,0.12); border: 1px solid rgba(107,203,119,0.3);
+  color: var(--c3); padding: 8px 18px; border-radius: 50px;
+  font-size: 13px; font-weight: 600; margin-bottom: 32px;
+  animation: rise 0.6s ease both;
+}
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c3); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero h1 {
+  font-size: clamp(42px, 7.5vw, 96px); font-weight: 900;
+  line-height: 1.0; letter-spacing: -3px; margin-bottom: 24px;
+  animation: rise 0.6s 0.1s ease both;
+}
+.t-y { color: var(--c2); }
+.t-p { color: var(--c5); }
+.t-b { color: var(--c4); }
+
+.hero-desc {
+  font-size: 18px; line-height: 1.75; color: var(--muted); max-width: 550px;
+  margin: 0 auto 36px; animation: rise 0.6s 0.2s ease both;
+}
+.hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: rise 0.6s 0.3s ease both; }
+
+@keyframes rise { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+/* STATS STRIP */
+.stats {
+  display: flex; flex-wrap: wrap;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.st { flex: 1; min-width: 150px; text-align: center; padding: 28px 16px; border-right: 1px solid var(--border); }
+.st:last-child { border-right: none; }
+.st-n { font-size: 34px; font-weight: 900; letter-spacing: -1px; }
+.st-l { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* PROBLEM CARDS */
+.sec { padding: 80px 24px; max-width: 1080px; margin: 0 auto; }
+.lbl { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+.ttl { font-size: clamp(28px, 4vw, 46px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; }
+.sub { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 540px; }
+
+.pgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 40px; }
+.pcard {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 24px;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.pcard:hover { transform: translateY(-4px); border-color: var(--border2); }
+.pcard-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.pcard-icon { font-size: 28px; }
+.pcard-stat { font-size: 26px; font-weight: 900; opacity: 0.55; }
+.pcard h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+.pcard p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.ptag { display: inline-block; margin-top: 12px; padding: 4px 12px; border-radius: 50px; font-size: 11px; font-weight: 800; }
+
+/* HOW SECTION */
+.how-bg { background: var(--surface); padding: 80px 24px; }
+.how-inner { max-width: 1080px; margin: 0 auto; }
+.how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; margin-top: 48px; }
+.hcard { text-align: center; }
+.hnum {
+  width: 64px; height: 64px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 900; margin: 0 auto 16px;
+}
+.hcard h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+.hcard p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* QUIZ CTA */
+.qcta {
+  padding: 100px 24px; text-align: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,217,61,0.06) 0%, transparent 70%);
+}
+.qcta-t { font-size: clamp(32px, 5vw, 64px); font-weight: 900; letter-spacing: -2px; margin-bottom: 14px; }
+.qcta-s { font-size: 17px; color: var(--muted); margin-bottom: 36px; line-height: 1.65; }
+.chips-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+.chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--border2);
+  padding: 10px 20px; border-radius: 50px; font-size: 14px; font-weight: 500;
+}
+.cnum {
+  width: 24px; height: 24px; border-radius: 50%; color: #fff;
+  font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+}
+.big-btn {
+  background: var(--c2); color: #111; border: none;
+  padding: 18px 44px; border-radius: 50px;
+  font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 900;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+}
+.big-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,217,61,0.4); }
+
+footer {
+  border-top: 1px solid var(--border); padding: 28px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.fl { font-size: 18px; font-weight: 900; }
+.fl b { color: var(--c2); }
+.fr { font-size: 13px; color: var(--muted); }
+
+/* ═══════════════════════════════════
+   PAGE 2 — QUIZ
+═══════════════════════════════════ */
+.qtop {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(5,5,10,0.92); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  display: flex; align-items: center; gap: 20px;
+}
+.qlogo { font-size: 18px; font-weight: 900; }
+.qlogo b { color: var(--c2); }
+.prog-wrap { flex: 1; height: 6px; background: var(--card); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--c5), var(--c4)); transition: width 0.5s ease; }
+.qnum { font-size: 13px; color: var(--muted); font-weight: 700; white-space: nowrap; }
+
+.qbody { max-width: 720px; margin: 0 auto; padding: 48px 24px 32px; }
+.qbody-anim { animation: rise 0.4s ease; }
+.qbadge {
+  display: inline-block; padding: 5px 14px; border-radius: 50px;
+  font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+}
+.qtext { font-size: clamp(22px, 3.5vw, 34px); font-weight: 900; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 8px; }
+.qhint { font-size: 15px; color: var(--muted); margin-bottom: 32px; }
+
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt {
+  background: var(--card); border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 18px 20px;
+  cursor: pointer; text-align: left; width: 100%;
+  display: flex; gap: 14px; align-items: flex-start;
+  font-family: 'Outfit', sans-serif; color: var(--text);
+  transition: all 0.2s;
+}
+.opt:hover { border-color: var(--border2); background: rgba(255,255,255,0.04); transform: translateY(-2px); }
+.opt.on { border-color: var(--c4); background: rgba(77,150,255,0.1); }
+.oe { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.ot { font-size: 15px; font-weight: 800; margin-bottom: 4px; line-height: 1.3; }
+.os { font-size: 13px; color: var(--muted); line-height: 1.4; }
+
+.qnav { max-width: 720px; margin: 0 auto; padding: 16px 24px 48px; display: flex; align-items: center; }
+.btn-bk {
+  background: none; border: 1px solid var(--border2); color: var(--muted);
+  padding: 12px 24px; border-radius: 50px; cursor: pointer;
+  font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700;
+  transition: all 0.2s;
+}
+.btn-bk:hover { color: var(--text); }
+.btn-nx {
+  margin-left: auto;
+  background: linear-gradient(135deg, var(--c5), var(--c4));
+  color: white; border: none; padding: 14px 32px; border-radius: 50px;
+  font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 6px 24px rgba(77,150,255,0.3);
+}
+.btn-nx:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(77,150,255,0.4); }
+
+/* ═══════════════════════════════════
+   PAGE 3 — RESULTS
+═══════════════════════════════════ */
+.rhero {
+  padding: 80px 24px 60px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.rorb {
+  position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.18; pointer-events: none;
+}
+.rorb-a { width: 400px; height: 400px; top: -100px; left: -100px; }
+.rorb-b { width: 350px; height: 350px; bottom: -80px; right: -80px; }
+
+.profile-ring {
+  width: 110px; height: 110px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 46px; margin: 0 auto 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.rtitle { font-size: clamp(32px, 5.5vw, 60px); font-weight: 900; letter-spacing: -2px; margin-bottom: 12px; }
+.rsub { font-size: 17px; color: var(--muted); max-width: 540px; margin: 0 auto 24px; line-height: 1.75; }
+.score-row {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--border2);
+  padding: 12px 24px; border-radius: 50px; font-size: 15px; font-weight: 600;
+}
+.score-track { width: 120px; height: 7px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+.score-bar { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--c3), var(--c4)); }
+
+.rbody { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+.rttl { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 20px; }
+
+.sgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 48px; }
+.scard {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; border-top: 3px solid;
+  transition: transform 0.2s;
+}
+.scard:hover { transform: translateY(-3px); }
+.se { font-size: 26px; margin-bottom: 10px; }
+.st2 { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+.sd { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+.rmbox {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 24px; padding: 32px; margin-bottom: 48px;
+}
+.rm-intro-t { font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 32px; }
+.rmlist { display: flex; flex-direction: column; }
+.rmitem { display: flex; gap: 0; position: relative; }
+.rmitem:not(:last-child) .rml::after {
+  content: ''; position: absolute; left: 21px; top: 50px; bottom: 0;
+  width: 2px; background: var(--border);
+}
+.rml { position: relative; width: 48px; flex-shrink: 0; padding-top: 6px; }
+.rmcirc {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 900; color: white; position: relative; z-index: 1;
+}
+.rmr { padding: 4px 0 36px 20px; flex: 1; }
+.rmw { font-size: 11px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.rmtitle { font-size: 18px; font-weight: 900; letter-spacing: -0.3px; margin-bottom: 10px; }
+.rmdesc { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+.rmtags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.rmtag {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 5px 12px; border-radius: 50px; font-size: 12px; font-weight: 600; color: var(--muted);
+}
+.rmout {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(107,203,119,0.1); border: 1px solid rgba(107,203,119,0.25);
+  color: var(--c3); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 800;
+}
+
+.jgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 48px; }
+.jcard {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 18px; padding: 20px; transition: all 0.2s; cursor: pointer;
+}
+.jcard:hover { transform: translateY(-4px); border-color: var(--border2); }
+.jtop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.jico { font-size: 28px; }
+.jmatch { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 50px; }
+.jtitle { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.jco { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.jtags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.jtag { background: var(--surface); border: 1px solid var(--border); padding: 3px 10px; border-radius: 50px; font-size: 12px; color: var(--muted); }
+.jbot { display: flex; align-items: center; justify-content: space-between; }
+.jsal { font-size: 14px; font-weight: 800; }
+.japply {
+  padding: 8px 18px; border-radius: 50px; border: none;
+  font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800;
+  cursor: pointer; color: white; transition: opacity 0.2s;
+}
+.japply:hover { opacity: 0.85; }
+
+.retake-sec { text-align: center; padding-top: 32px; border-top: 1px solid var(--border); }
+.retake-sec p { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.btn-ret {
+  background: var(--card); border: 1px solid var(--border2); color: var(--text);
+  padding: 12px 28px; border-radius: 50px;
+  font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 800;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-ret:hover { border-color: var(--c2); color: var(--c2); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--card); border: 1px solid var(--border2);
+  color: var(--text); padding: 14px 20px; border-radius: 14px;
+  font-size: 14px; font-weight: 600; max-width: 280px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  transform: translateY(80px); opacity: 0; transition: all 0.35s; pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+@media (max-width: 680px) {
+  .nav { padding: 14px 20px; }
+  .nav-sdg { display: none; }
+  .opts { grid-template-columns: 1fr; }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     PAGE 1 — LANDING
+═══════════════════════════════════ -->
+<div id="p1" class="page on">
+
+  <nav class="nav">
+    <div class="nav-logo">Launch<b>Pad</b></div>
+    <div class="nav-sdg">🌱 SDG Goal #8 — Decent Work</div>
+    <button class="nav-cta" onclick="startQuiz()">Take Quiz →</button>
+  </nav>
+
+  <div class="hero">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="hero-live"><div class="pulse-dot"></div>Free for all youth — no login needed</div>
+    <h1>
+      Discover<br>
+      <span class="t-y">Your Skills.</span><br>
+      <span class="t-p">Get</span> <span class="t-b">Hired.</span>
+    </h1>
+    <p class="hero-desc">73 million young people are unemployed — not because they lack talent, but because no one helped them discover what they're good at. LaunchPad fixes that in 10 minutes.</p>
+    <div class="hero-actions">
+      <button class="btn btn-y" onclick="startQuiz()">🚀 Start Skill Quiz</button>
+      <button class="btn btn-g" onclick="document.getElementById('probsec').scrollIntoView({behavior:'smooth'})">Learn More ↓</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="st"><div class="st-n" style="color:var(--c1)">73M+</div><div class="st-l">Youth unemployed globally</div></div>
+    <div class="st"><div class="st-n" style="color:var(--c2)">60%</div><div class="st-l">Jobs need no degree</div></div>
+    <div class="st"><div class="st-n" style="color:var(--c3)">3x</div><div class="st-l">Faster hiring with skill match</div></div>
+    <div class="st"><div class="st-n" style="color:var(--c4)">8L+</div><div class="st-l">Avg salary after upskill (₹)</div></div>
+    <div class="st"><div class="st-n" style="color:var(--c5)">10min</div><div class="st-l">To get your roadmap</div></div>
+  </div>
+
+  <div id="probsec">
+  <div class="sec">
+    <div class="lbl" style="color:var(--c1)">The Problem</div>
+    <div class="ttl">Why Youth Can't Find Work</div>
+    <p class="sub">The problem isn't a lack of jobs. It's a massive information and matching gap that the system refuses to fix.</p>
+    <div class="pgrid">
+      <div class="pcard">
+        <div class="pcard-top"><span class="pcard-icon">🎯</span><span class="pcard-stat" style="color:var(--c1)">82%</span></div>
+        <h3>No Self-Awareness</h3>
+        <p>Most youth never received career guidance. They don't know what their strengths are or which careers actually fit them.</p>
+        <span class="ptag" style="background:rgba(255,107,107,0.12);color:var(--c1)">Core Problem</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-top"><span class="pcard-icon">🔗</span><span class="pcard-stat" style="color:var(--c2)">60%</span></div>
+        <h3>Skill-Job Mismatch</h3>
+        <p>Young people apply to completely wrong roles — either overqualified or underqualified — wasting months chasing rejections.</p>
+        <span class="ptag" style="background:rgba(255,217,61,0.12);color:var(--c2)">Efficiency Gap</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-top"><span class="pcard-icon">🗺️</span><span class="pcard-stat" style="color:var(--c3)">73M</span></div>
+        <h3>No Roadmap</h3>
+        <p>Even motivated youth have zero step-by-step guidance on how to go from where they are to where they want to be.</p>
+        <span class="ptag" style="background:rgba(107,203,119,0.12);color:var(--c3)">Guidance Gap</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-top"><span class="pcard-icon">📍</span><span class="pcard-stat" style="color:var(--c4)">45%</span></div>
+        <h3>Rural Access Gap</h3>
+        <p>Quality job guidance is locked to 5 metro cities. Youth in Tier 2/3 cities and villages have zero access to counseling.</p>
+        <span class="ptag" style="background:rgba(77,150,255,0.12);color:var(--c4)">Equity Issue</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-top"><span class="pcard-icon">🎓</span><span class="pcard-stat" style="color:var(--c5)">3x</span></div>
+        <h3>Degree Bias</h3>
+        <p>Platforms filter by degrees, ignoring skilled youth who learned through experience. First-gen job seekers have no network.</p>
+        <span class="ptag" style="background:rgba(255,111,200,0.12);color:var(--c5)">Systemic</span>
+      </div>
+      <div class="pcard">
+        <div class="pcard-top"><span class="pcard-icon">⏳</span><span class="pcard-stat" style="color:var(--c6)">18mo</span></div>
+        <h3>Long Wait Times</h3>
+        <p>Without guidance, the average youth spends 18 months after graduation before landing their first meaningful job.</p>
+        <span class="ptag" style="background:rgba(167,139,250,0.12);color:var(--c6)">Time Cost</span>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="how-bg">
+    <div class="how-inner">
+      <div class="lbl" style="color:var(--c4)">How It Works</div>
+      <div class="ttl">From Lost to Employed</div>
+      <p class="sub">A simple 4-step journey that takes 10 minutes and gives you a complete career direction.</p>
+      <div class="how-grid">
+        <div class="hcard">
+          <div class="hnum" style="background:rgba(255,107,107,0.15);color:var(--c1)">1</div>
+          <h3>Answer 10 Questions</h3>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6">Quick questions about how you think, what you enjoy, and where you want to go in life.</p>
+        </div>
+        <div class="hcard">
+          <div class="hnum" style="background:rgba(255,217,61,0.15);color:var(--c2)">2</div>
+          <h3>Get Your Skill Profile</h3>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6">Instantly discover your career archetype and top strengths with a percentage match score.</p>
+        </div>
+        <div class="hcard">
+          <div class="hnum" style="background:rgba(107,203,119,0.15);color:var(--c3)">3</div>
+          <h3>Follow Your Roadmap</h3>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6">Get a week-by-week plan with free resources to build exactly the skills employers want.</p>
+        </div>
+        <div class="hcard">
+          <div class="hnum" style="background:rgba(77,150,255,0.15);color:var(--c4)">4</div>
+          <h3>Apply to Matched Jobs</h3>
+          <p style="color:var(--muted);font-size:14px;line-height:1.6">Browse verified job listings matched to your skill profile. No degree bias, no middleman.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="qcta">
+    <div class="lbl" style="color:var(--c5)">Ready?</div>
+    <div class="qcta-t">10 Questions.<br><span style="color:var(--c2)">Your Entire Future.</span></div>
+    <p class="qcta-s">Answer honestly. Get your career profile, full roadmap, and matched jobs — free, in 10 minutes.</p>
+    <div class="chips-row">
+      <div class="chip"><div class="cnum" style="background:var(--c5)">1</div>10 Questions</div>
+      <div class="chip"><div class="cnum" style="background:var(--c3)">2</div>Skill Profile</div>
+      <div class="chip"><div class="cnum" style="background:var(--c4)">3</div>Roadmap</div>
+      <div class="chip"><div class="cnum" style="background:var(--c2);color:#111">4</div>Job Matches</div>
+    </div>
+    <button class="big-btn" onclick="startQuiz()">🚀 Start Free Quiz →</button>
+  </div>
+
+  <footer>
+    <div class="fl">Launch<b>Pad</b></div>
+    <div class="fr">Built for SDG #8 — Decent Work and Economic Growth 🌱</div>
+  </footer>
+
+</div><!-- /p1 -->
+
+
+<!-- ═══════════════════════════════════
+     PAGE 2 — QUIZ
+═══════════════════════════════════ -->
+<div id="p2" class="page">
+
+  <div class="qtop">
+    <div class="qlogo">Launch<b>Pad</b></div>
+    <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="qnum" id="qNum">1 / 10</div>
+  </div>
+
+  <div class="qbody" id="qBody"></div>
+
+  <div class="qnav" id="qNav">
+    <button class="btn-bk" id="btnBk" onclick="goBack()" style="display:none">← Back</button>
+    <button class="btn-nx" id="btnNx" onclick="goNext()">Next →</button>
+  </div>
+
+</div><!-- /p2 -->
+
+
+<!-- ═══════════════════════════════════
+     PAGE 3 — RESULTS
+═══════════════════════════════════ -->
+<div id="p3" class="page">
+
+  <div class="rhero" id="rHero">
+    <div class="rorb rorb-a" id="rOrb1"></div>
+    <div class="rorb rorb-b" id="rOrb2"></div>
+    <div class="profile-ring" id="pRing">🧑‍💻</div>
+    <div class="rtitle" id="rTitle">Tech Builder</div>
+    <p class="rsub" id="rSub"></p>
+    <div class="score-row">
+      Career Match
+      <div class="score-track"><div class="score-bar" id="sBar" style="width:90%"></div></div>
+      <strong id="sNum" style="color:var(--c3)">90%</strong>
+    </div>
+  </div>
+
+  <div class="rbody">
+    <div class="rttl">Your Top Strengths 💪</div>
+    <div class="sgrid" id="sGrid"></div>
+
+    <div class="rmbox">
+      <div class="rttl">Your Career Roadmap 🗺️</div>
+      <p class="rm-intro-t" id="rmIntro"></p>
+      <div class="rmlist" id="rmList"></div>
+    </div>
+
+    <div class="rttl">Jobs Matched For You 💼</div>
+    <div class="jgrid" id="jGrid"></div>
+
+    <div class="retake-sec">
+      <p>Want to explore a different path?</p>
+      <button class="btn-ret" onclick="retake()">↩ Retake Quiz</button>
+    </div>
+  </div>
+
+</div><!-- /p3 -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+var QS = [
+  {
+    cat:"Thinking Style",cc:"var(--c1)",cb:"rgba(255,107,107,0.12)",
+    q:"When you face a tough problem, what do you do first?",
+    hint:"💭 Go with your gut — not what you think you should say",
+    opts:[
+      {e:"🔬",t:"Break it into logical steps",s:"Research and analyze carefully",v:"analytical"},
+      {e:"💬",t:"Talk it through with someone",s:"Get different perspectives",v:"people"},
+      {e:"🛠️",t:"Just start building and figure it out",s:"Learn by doing",v:"tech"},
+      {e:"🎨",t:"Sketch or visualize it first",s:"Think in pictures and patterns",v:"creative"}
+    ]
+  },
+  {
+    cat:"Flow State",cc:"var(--c2)",cb:"rgba(255,217,61,0.12)",
+    q:"Which activity makes you lose track of time completely?",
+    hint:"⏰ Hours feel like minutes — that is your zone",
+    opts:[
+      {e:"🖥️",t:"Building or coding something",s:"Making systems or apps",v:"tech"},
+      {e:"📖",t:"Reading, writing or deep research",s:"Absorbing and organizing knowledge",v:"analytical"},
+      {e:"🎤",t:"Teaching, presenting, or talking",s:"Sharing ideas with people",v:"people"},
+      {e:"✏️",t:"Drawing, designing, creating",s:"Making beautiful things",v:"creative"}
+    ]
+  },
+  {
+    cat:"Work Values",cc:"var(--c3)",cb:"rgba(107,203,119,0.12)",
+    q:"What would make you feel most proud after finishing a project?",
+    hint:"❤️ Your deepest work motivation",
+    opts:[
+      {e:"⚡",t:"It works and solves the problem",s:"Technical achievement",v:"tech"},
+      {e:"🌍",t:"It helped or changed someone life",s:"Human impact",v:"people"},
+      {e:"📊",t:"Data proves it was the best approach",s:"Evidence-based results",v:"analytical"},
+      {e:"😍",t:"People admire how beautiful it is",s:"Aesthetic excellence",v:"creative"}
+    ]
+  },
+  {
+    cat:"Natural Strengths",cc:"var(--c4)",cb:"rgba(77,150,255,0.12)",
+    q:"Which of these comes most naturally to you with little effort?",
+    hint:"🌟 Things others find hard but feel easy to you",
+    opts:[
+      {e:"🧩",t:"Spotting patterns and logical gaps",s:"Critical and analytical thinking",v:"analytical"},
+      {e:"🤝",t:"Reading people and building trust fast",s:"Empathy and communication",v:"people"},
+      {e:"🔧",t:"Fixing broken things and systems",s:"Technical problem-solving",v:"tech"},
+      {e:"💡",t:"Coming up with unexpected ideas",s:"Innovation and imagination",v:"creative"}
+    ]
+  },
+  {
+    cat:"Work Environment",cc:"var(--c5)",cb:"rgba(255,111,200,0.12)",
+    q:"Where would you do your absolute best work?",
+    hint:"🏠 The environment where you naturally thrive",
+    opts:[
+      {e:"🏠",t:"Alone at home with headphones on",s:"Deep focus, no distractions",v:"tech"},
+      {e:"🏢",t:"Busy office with team energy",s:"Collaborative and social",v:"people"},
+      {e:"📚",t:"Quiet library or research space",s:"Structured and organized",v:"analytical"},
+      {e:"🎪",t:"Creative studio, flexible space",s:"Inspiring and open",v:"creative"}
+    ]
+  },
+  {
+    cat:"Communication",cc:"var(--c6)",cb:"rgba(167,139,250,0.12)",
+    q:"How do you prefer to explain a complex idea to someone?",
+    hint:"🗣️ Your natural communication instinct",
+    opts:[
+      {e:"📐",t:"Draw a diagram or make a visual",s:"Show it visually",v:"creative"},
+      {e:"📋",t:"Write it in a clear structured list",s:"Systematic explanation",v:"analytical"},
+      {e:"💻",t:"Build a quick demo or prototype",s:"Show a working example",v:"tech"},
+      {e:"🗣️",t:"Tell a story with a real example",s:"Narrative and conversational",v:"people"}
+    ]
+  },
+  {
+    cat:"Goal Setting",cc:"var(--c1)",cb:"rgba(255,107,107,0.12)",
+    q:"When you set a goal, how do you naturally approach it?",
+    hint:"🎯 Your internal planning style",
+    opts:[
+      {e:"🔍",t:"Research everything first, then plan",s:"Thorough preparation before action",v:"analytical"},
+      {e:"🚀",t:"Jump in immediately and adapt",s:"Action-first, learn by doing",v:"tech"},
+      {e:"👥",t:"Gather a team and figure it out together",s:"Collaborative pursuit",v:"people"},
+      {e:"🌈",t:"Imagine the ideal result, work backwards",s:"Vision-first thinking",v:"creative"}
+    ]
+  },
+  {
+    cat:"Feedback Style",cc:"var(--c3)",cb:"rgba(107,203,119,0.12)",
+    q:"Which type of feedback excites you the most?",
+    hint:"🏆 The recognition that feels most meaningful",
+    opts:[
+      {e:"⚙️",t:"Your solution was the most efficient",s:"Technical achievement praise",v:"tech"},
+      {e:"🌟",t:"You made this so easy to understand",s:"Communication clarity praise",v:"people"},
+      {e:"📈",t:"The results beat all our benchmarks",s:"Data-driven performance",v:"analytical"},
+      {e:"💎",t:"This is the most beautiful work",s:"Creative quality recognition",v:"creative"}
+    ]
+  },
+  {
+    cat:"Dream Project",cc:"var(--c4)",cb:"rgba(77,150,255,0.12)",
+    q:"You have 6 free months and no money worries. What do you build?",
+    hint:"🚀 No limits, no judgment — your real dream",
+    opts:[
+      {e:"📱",t:"An app millions of people could use",s:"Tech that scales globally",v:"tech"},
+      {e:"🎬",t:"A brand, channel or creative business",s:"Creative empire and media",v:"creative"},
+      {e:"🏫",t:"A community program helping real people",s:"Social enterprise or NGO",v:"people"},
+      {e:"📊",t:"A research or data-driven consultancy",s:"Knowledge and analysis business",v:"analytical"}
+    ]
+  },
+  {
+    cat:"Future Vision",cc:"var(--c5)",cb:"rgba(255,111,200,0.12)",
+    q:"In 5 years, which feels like your version of making it?",
+    hint:"🌅 Your personal definition of career success",
+    opts:[
+      {e:"🧑‍💻",t:"Building products at a top tech company",s:"Engineer, Product Manager, CTO",v:"tech"},
+      {e:"🎨",t:"Running my own creative studio or brand",s:"Designer, Director, Entrepreneur",v:"creative"},
+      {e:"🌍",t:"Leading a team making real impact",s:"Manager, NGO Leader, Educator",v:"people"},
+      {e:"📈",t:"Being the smartest with data in the room",s:"Data Scientist, Analyst, Consultant",v:"analytical"}
+    ]
+  }
+];
+
+var PROFILES = {
+  tech:{
+    icon:"🧑‍💻",title:"Tech Builder",
+    sub:"You are a logical, hands-on problem solver who thrives building systems and apps. India's tech sector adds 1 million jobs every year and most do not require an IIT degree. Your builder mindset is exactly what the industry needs right now.",
+    color:"#4d96ff",score:92,
+    strengths:[
+      {e:"🧩",t:"Systems Thinking",d:"You naturally see how pieces connect. You break complex problems into solvable parts before others even understand the question.",c:"#4d96ff"},
+      {e:"⚡",t:"Fast Execution",d:"You learn by building. While others are still planning, you already have a working prototype ready to test.",c:"#00cfff"},
+      {e:"🔍",t:"Debugging Mind",d:"You are persistent. When something breaks, you do not give up — you trace the exact root cause and fix it.",c:"#a78bfa"},
+      {e:"📐",t:"Logical Precision",d:"Your solutions are clean, efficient, and actually work. You value accuracy over approximation in everything you do.",c:"#6bcb77"}
+    ],
+    intro:"Your builder's mind is your biggest asset. The fastest path to a well-paying tech job does not require a degree — it requires a portfolio of real work. Here is your week-by-week roadmap to go from zero to employed in tech:",
+    roadmap:[
+      {w:"Weeks 1-3",c:"#ff6b6b",title:"Build Your Foundation",desc:"Start with HTML, CSS, and basic JavaScript. Do not try to memorize everything — just build small things every day. A personal webpage, a to-do list, a simple calculator. Every project teaches you 10 new concepts. Focus on output, not theory.",tags:["freeCodeCamp","The Odin Project","W3Schools"],out:"You can build and publish a real webpage"},
+      {w:"Weeks 4-6",c:"#ffd93d",title:"JavaScript Deep Dive",desc:"Learn JavaScript properly — functions, DOM manipulation, fetch API, and async/await. Build a weather app or quiz game to practice. This is where most beginners quit, which means this is exactly where you will stand out from the crowd.",tags:["JavaScript.info","Traversy Media (YouTube)","30 Days of JS"],out:"You can build interactive web applications"},
+      {w:"Weeks 7-10",c:"#6bcb77",title:"Pick One: React or Python",desc:"React builds app interfaces and leads to frontend developer roles paying 4-8 LPA. Python handles backend and data and leads to 5-12 LPA roles. Pick ONE — do not try to do both at the same time. Depth beats breadth for your first job.",tags:["React Docs","Python.org","Scrimba React"],out:"You have a specialized skill employers search for"},
+      {w:"Weeks 11-14",c:"#4d96ff",title:"Build 3 Real Projects",desc:"Build a portfolio with 3 complete projects each solving a real problem — a job board, a budget tracker, a local business website. Host them all on GitHub Pages or Vercel. This portfolio IS your resume and employers care about it more than certificates.",tags:["GitHub Pages (Free)","Vercel (Free)","Netlify (Free)"],out:"You have a professional portfolio to show employers"},
+      {w:"Weeks 15-18",c:"#ff6fc8",title:"Get Industry Certified",desc:"Add certifications that validate your skills to the outside world. Google, Microsoft, and AWS all offer free or very affordable certifications. A Google Developer certificate often gets more interview callbacks than a B.Tech degree from a tier-3 college.",tags:["Google Digital Garage","Microsoft Learn","AWS Free Tier"],out:"You have industry-recognized credentials that open doors"},
+      {w:"Weeks 19-22",c:"#a78bfa",title:"Land Your First Opportunity",desc:"Start with internships on Internshala to build your professional record and get your first reference. Then apply on LinkedIn and AngelList for full-time roles. Send 5 quality customized applications per day — this beats 50 copy-paste ones every time.",tags:["Internshala","LinkedIn","AngelList","GitHub Contributions"],out:"You get real interviews and land your first tech role"}
+    ],
+    jobs:[
+      {e:"🖥️",t:"Junior Web Developer",co:"TechBridge Pvt Ltd",tags:["HTML/CSS","JavaScript","Remote"],sal:"3-5 LPA",match:"94%",mc:"#4d96ff",mg:"linear-gradient(135deg,#4d96ff,#00cfff)"},
+      {e:"⚙️",t:"React Frontend Intern",co:"Startup Studio",tags:["React","Figma","Hybrid"],sal:"15k/month",match:"89%",mc:"#a78bfa",mg:"linear-gradient(135deg,#a78bfa,#4d96ff)"},
+      {e:"🤖",t:"Python Developer",co:"DataLabs India",tags:["Python","API","Entry Level"],sal:"4-6 LPA",match:"85%",mc:"#6bcb77",mg:"linear-gradient(135deg,#6bcb77,#4d96ff)"}
+    ]
+  },
+  creative:{
+    icon:"🎨",title:"Creative Visionary",
+    sub:"You see the world through a lens of beauty, story, and design. India's creative economy is exploding — from game design to brand identity to UX. Your ability to create experiences that others feel is rare and deeply valuable in the market.",
+    color:"#ff6b6b",score:89,
+    strengths:[
+      {e:"👁️",t:"Visual Intelligence",d:"You see composition, color, and hierarchy instinctively. Spaces and screens communicate through you in ways others simply cannot explain.",c:"#ff6b6b"},
+      {e:"📖",t:"Storytelling",d:"You do not just communicate — you create narratives that people remember long after they have moved on to something else.",c:"#ff6fc8"},
+      {e:"💡",t:"Lateral Thinking",d:"You find unusual connections between ideas. Solutions that seem impossible to others feel completely natural and obvious to you.",c:"#ffd93d"},
+      {e:"😍",t:"Taste and Craft",d:"You have high standards. You care deeply about quality and you will not ship something that does not feel right to you.",c:"#a78bfa"}
+    ],
+    intro:"Creative careers have never been more valuable — and you do not need an art college degree to succeed. With a strong portfolio and the right tools, you can earn more than most engineers. Here is your exact roadmap:",
+    roadmap:[
+      {w:"Weeks 1-2",c:"#ff6fc8",title:"Master Design Basics",desc:"Start with Canva to understand design principles — grid, contrast, typography, and color theory. Create 20 different designs just for practice. Do not worry about originality yet — copying great work to understand how it is made is exactly how every professional designer started.",tags:["Canva Learn (Free)","Design Principles YouTube","Pinterest for Inspiration"],out:"You can create professional-quality graphics for clients"},
+      {w:"Weeks 3-7",c:"#ff6b6b",title:"Learn Figma for UI and UX",desc:"Figma is the industry standard for designing apps and websites used by companies everywhere. Learn components, auto-layout, and prototyping. Redesign 3 existing apps you use daily. This single skill alone can earn you 30,000 to 50,000 rupees per month as a freelancer.",tags:["Figma Academy (Free)","UI/UX Crash Course","Figma Community"],out:"You can design complete app interfaces and prototypes"},
+      {w:"Weeks 8-10",c:"#ffd93d",title:"Learn Video and Motion",desc:"Learn CapCut or DaVinci Resolve for video editing. Reels, brand videos, and explainer content are the most in-demand creative skills in the market right now. Make 10 short videos about absolutely anything — just practice the craft every single day without stopping.",tags:["DaVinci Resolve (Free)","CapCut (Free)","Motion Array Tutorials"],out:"You can produce professional video content for brands"},
+      {w:"Weeks 11-14",c:"#6bcb77",title:"Build Your Portfolio",desc:"Create a portfolio with 8 to 10 diverse projects. Include a brand identity, a mobile app redesign, a social media campaign, and a video piece. Use Behance or your own website. Your portfolio IS your degree — make it stunning and show your real range of skills.",tags:["Behance (Free)","Dribbble","Adobe Portfolio (Free)"],out:"You have a world-class portfolio that wins paying clients"},
+      {w:"Weeks 15-18",c:"#4d96ff",title:"Start Freelancing",desc:"Create profiles on Fiverr and Upwork. Start with lower rates to build up reviews and reputation. A logo design package on Fiverr starts at 2000 rupees. With 10 strong reviews you can charge 15000 rupees. Top creative freelancers in India earn 2 to 5 lakh per month.",tags:["Fiverr","Upwork","Instagram Portfolio"],out:"You earn your first real freelance income from creative work"},
+      {w:"Weeks 19+",c:"#ff6fc8",title:"Go Agency or Full-Time",desc:"Apply to creative agencies, startups, or EdTech companies as a junior designer. Or grow your freelance work into a proper studio with recurring clients. Indian startups raised 24 billion dollars in 2023 — every single one of them needs talented creative professionals.",tags:["LinkedIn","Internshala","AngelList","Naukri"],out:"You have a full-time creative career or growing business"}
+    ],
+    jobs:[
+      {e:"🎨",t:"UI/UX Design Intern",co:"Designify Studio",tags:["Figma","Fresher OK","Hybrid"],sal:"15k/month",match:"92%",mc:"#ff6b6b",mg:"linear-gradient(135deg,#ff6b6b,#ff6fc8)"},
+      {e:"📱",t:"Social Media Designer",co:"GrowthLabs",tags:["Canva","Content","Remote"],sal:"2.5-4 LPA",match:"87%",mc:"#ff6fc8",mg:"linear-gradient(135deg,#ff6fc8,#a78bfa)"},
+      {e:"🎬",t:"Video Editor",co:"ContentCo Media",tags:["CapCut","Reels","Freelance"],sal:"25k/month",match:"84%",mc:"#ffd93d",mg:"linear-gradient(135deg,#ffd93d,#ff6b6b)"}
+    ]
+  },
+  people:{
+    icon:"🗣️",title:"People Champion",
+    sub:"You energize rooms, build trust effortlessly, and have a gift for making complex things simple. HR, education, NGOs, and sales desperately need your energy. In a world drowning in data, the ability to create real human connection has never been more valuable.",
+    color:"#6bcb77",score:88,
+    strengths:[
+      {e:"❤️",t:"Deep Empathy",d:"You feel what others feel. This makes you a natural counselor, teacher, and leader that people actually want to follow and trust.",c:"#6bcb77"},
+      {e:"🎤",t:"Communication Power",d:"You can explain absolutely anything to anyone in a way that clicks immediately. Complex ideas become simple stories in your hands.",c:"#ff6b6b"},
+      {e:"🌟",t:"Natural Leadership",d:"People naturally look to you in uncertain situations. You create clarity and calm for others when everyone around them is panicking.",c:"#ffd93d"},
+      {e:"🤝",t:"Relationship Builder",d:"You turn strangers into allies very quickly. Your network grows naturally because people genuinely like and trust you.",c:"#4d96ff"}
+    ],
+    intro:"Your people skills are rare and deeply valuable in today's market. The fastest growing sectors in India — EdTech, NGOs, HR, and community management — are desperate for people who build genuine human connections. Here is your path forward:",
+    roadmap:[
+      {w:"Weeks 1-3",c:"#6bcb77",title:"Sharpen Communication Skills",desc:"Take a structured public speaking course. Your instincts are already strong — now add proven frameworks. Learn to structure persuasive arguments, give effective feedback, and facilitate group discussions professionally. These skills alone can instantly double your salary potential.",tags:["Coursera Public Speaking (Free)","TED Masterclass YouTube","Toastmasters India"],out:"You can communicate confidently in any professional setting"},
+      {w:"Weeks 4-6",c:"#ffd93d",title:"Add Essential Digital Tools",desc:"Learn Microsoft Excel, Google Workspace, and basic project management tools like Notion or Trello. Many people roles now require basic tech competency alongside communication. This bridges the gap between your natural people skills and what the modern workplace requires from everyone.",tags:["Microsoft Learn (Free)","Google Workspace (Free)","Notion (Free)"],out:"You are fully tech-ready for any people-facing role today"},
+      {w:"Weeks 7-10",c:"#4d96ff",title:"Study HR or Education",desc:"Take a free HR certification course — you will learn recruitment, performance management, and employee engagement strategies. Or study pedagogy and teaching methods if education calls to you. NPTEL offers completely free certified courses from IITs on both of these paths.",tags:["NPTEL HR Courses (Free)","SHRM Foundation","Google Project Management"],out:"You have real professional knowledge to back your instincts"},
+      {w:"Weeks 11-14",c:"#ff6b6b",title:"Volunteer and Build Your Record",desc:"Volunteer at an NGO, community event, or student organization this month. Lead a project. Manage a small team of people. Train a batch of students in something you know. This hands-on experience is worth more than any certificate — it is proof you can lead real people.",tags:["iVolunteer.in","Youth for Seva","NSS Programs"],out:"You have real leadership experience that impresses employers"},
+      {w:"Weeks 15-18",c:"#ff6fc8",title:"Craft Your Personal Story",desc:"Your resume needs to tell stories of people helped, teams led, and problems solved through communication and leadership. Learn LinkedIn personal branding — a strong profile generates inbound opportunities without you having to apply. Apply specifically to NGOs, EdTech, and HR roles.",tags:["LinkedIn Learning (Free)","Naukri Profile Tips","Resume Worded (Free)"],out:"You have a compelling personal profile that stands out completely"},
+      {w:"Weeks 19+",c:"#a78bfa",title:"Grow Into Leadership",desc:"Get your first people role — HR intern, teaching assistant, community manager, or sales trainee. Within 2 years, people leaders who start in entry-level roles are managing teams of 10 or more and earning 8 to 15 LPA at Indian startups. Your growth ceiling is very high.",tags:["Internshala","LinkedIn Jobs","NGO Jobs India","WorkIndia"],out:"You are on the leadership track with clear career growth ahead"}
+    ],
+    jobs:[
+      {e:"🤝",t:"Community Manager",co:"GreenFuture NGO",tags:["Communication","Leadership","On-site"],sal:"2.5-4 LPA",match:"91%",mc:"#6bcb77",mg:"linear-gradient(135deg,#6bcb77,#4d96ff)"},
+      {e:"📚",t:"Training Coordinator",co:"EduBridge India",tags:["Teaching","Content","Hybrid"],sal:"3-5 LPA",match:"86%",mc:"#ff6b6b",mg:"linear-gradient(135deg,#ff6b6b,#ffd93d)"},
+      {e:"👥",t:"HR Trainee",co:"PeopleFirst Corp",tags:["HR","Recruitment","Office"],sal:"2.5-3.5 LPA",match:"83%",mc:"#ff6fc8",mg:"linear-gradient(135deg,#ff6fc8,#a78bfa)"}
+    ]
+  },
+  analytical:{
+    icon:"📊",title:"Data Analyst",
+    sub:"You see patterns where others see chaos. You question assumptions, love evidence, and make decisions that are provably correct. The data economy is the fastest growing sector globally — and India is at the absolute center of this massive opportunity right now.",
+    color:"#a78bfa",score:91,
+    strengths:[
+      {e:"🔍",t:"Pattern Recognition",d:"You notice trends and anomalies instantly. You see the signal in the noise before anyone else in the room does.",c:"#a78bfa"},
+      {e:"🧮",t:"Quantitative Thinking",d:"Numbers tell you stories that others cannot read. You translate raw data into clear insights that guide real decisions.",c:"#4d96ff"},
+      {e:"📋",t:"Structured Organization",d:"You create systems that others rely on. Reports, frameworks, and processes flow naturally and efficiently from your thinking.",c:"#6bcb77"},
+      {e:"🎯",t:"Critical Thinking",d:"You do not accept assumptions without evidence. You test hypotheses, spot logical flaws, and always demand proof before deciding.",c:"#ff6b6b"}
+    ],
+    intro:"Data is the new oil — and analysts who turn raw numbers into business decisions are among the highest paid professionals in India today. You do not need a statistics PhD. You need the right tools and a strong portfolio. Here is exactly how to get there:",
+    roadmap:[
+      {w:"Weeks 1-2",c:"#a78bfa",title:"Excel Mastery",desc:"Learn Excel beyond the basics — VLOOKUP, pivot tables, conditional formatting, basic macros, and data visualization charts. Most analytics jobs still rely heavily on Excel every single day. Being truly excellent at Excel puts you above 80 percent of applicants before you even learn anything else.",tags:["ExcelJet (Free)","Chandoo.org (Free)","Microsoft Excel Training (Free)"],out:"You can confidently handle real business data inside Excel"},
+      {w:"Weeks 3-5",c:"#4d96ff",title:"Statistics Fundamentals",desc:"Learn descriptive statistics, probability basics, and hypothesis testing. You do not need advanced calculus — you need solid intuition about what data means and how to interpret it correctly. Khan Academy makes all of this completely free and surprisingly approachable for total beginners.",tags:["Khan Academy Stats (Free)","StatQuest YouTube","Think Stats (Free eBook)"],out:"You understand what data is actually saying in any situation"},
+      {w:"Weeks 6-10",c:"#6bcb77",title:"Learn SQL Completely",desc:"SQL is the most universal data skill that exists in the industry. Every database, every company, every analytics platform uses it. Learn SELECT, JOINs, GROUP BY, and subqueries. Build queries that answer real business questions — this skill alone is enough to get your first job interview.",tags:["SQLZoo (Free)","Mode SQL Tutorial (Free)","LeetCode SQL (Free)"],out:"You can query any database and extract the insights needed"},
+      {w:"Weeks 11-15",c:"#ff6b6b",title:"Python for Data Science",desc:"Learn Python with pandas and matplotlib libraries. You will clean messy datasets, automate repetitive analysis tasks, and create professional visualizations automatically. Kaggle's free Python course is perfect for this and takes about 5 focused hours total to complete.",tags:["Kaggle Learn Python (Free)","Pandas Documentation","Matplotlib Tutorials"],out:"You can automate complex data analysis with code efficiently"},
+      {w:"Weeks 16-18",c:"#ffd93d",title:"Build Your Data Portfolio",desc:"Complete 3 real data projects — an exploratory analysis of public data like India census or Zomato dataset, a business dashboard built in Power BI, and a basic predictive model. Post all three on GitHub and write a short article about each one on LinkedIn to get visibility.",tags:["Power BI Desktop (Free)","Tableau Public (Free)","Kaggle Datasets","GitHub"],out:"You have a strong portfolio that proves your analytical skills"},
+      {w:"Weeks 19+",c:"#ff6fc8",title:"Enter the Data Economy",desc:"Apply to data analyst, business analyst, and operations analyst roles confidently. Indian IT companies, funded startups, and consulting firms hire hundreds of entry-level data professionals every single month. Your portfolio does all the talking for you — no degree required.",tags:["Naukri","LinkedIn","Internshala","Analytics Vidhya Jobs"],out:"You are employed in India's fastest growing career sector"}
+    ],
+    jobs:[
+      {e:"📊",t:"Data Analyst Trainee",co:"FinServ Analytics",tags:["Excel","SQL","Fresher OK"],sal:"3-5 LPA",match:"93%",mc:"#a78bfa",mg:"linear-gradient(135deg,#a78bfa,#4d96ff)"},
+      {e:"📈",t:"Business Analyst",co:"ConsultPro India",tags:["Data","PowerPoint","Office"],sal:"4-7 LPA",match:"88%",mc:"#4d96ff",mg:"linear-gradient(135deg,#4d96ff,#6bcb77)"},
+      {e:"🔢",t:"Operations Analyst",co:"Logistics Corp",tags:["Excel","Reporting","Fresher"],sal:"2.8-4.5 LPA",match:"82%",mc:"#ff6b6b",mg:"linear-gradient(135deg,#ff6b6b,#ffd93d)"}
+    ]
+  }
+};
+
+var cur = 0, answers = [], sel = null;
+
+function show(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('on'); });
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() { show('p2'); renderQ(); }
+function retake() { cur = 0; answers = []; sel = null; show('p2'); renderQ(); }
+
+function renderQ() {
+  var q = QS[cur];
+  var pct = Math.round((cur / QS.length) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('qNum').textContent = (cur + 1) + ' / ' + QS.length;
+
+  var html = '<div class="qbody-anim">';
+  html += '<div class="qbadge" style="background:' + q.cb + ';color:' + q.cc + '">' + q.cat + '</div>';
+  html += '<div class="qtext">' + q.q + '</div>';
+  html += '<div class="qhint">' + q.hint + '</div>';
+  html += '<div class="opts">';
+  for (var i = 0; i < q.opts.length; i++) {
+    var o = q.opts[i];
+    var picked = (answers[cur] === o.v) ? ' on' : '';
+    html += '<button class="opt' + picked + '" onclick="pick(\'' + o.v + '\', this)">';
+    html += '<span class="oe">' + o.e + '</span>';
+    html += '<div><div class="ot">' + o.t + '</div><div class="os">' + o.s + '</div></div>';
+    html += '</button>';
+  }
+  html += '</div></div>';
+  document.getElementById('qBody').innerHTML = html;
+
+  sel = answers[cur] || null;
+  document.getElementById('btnBk').style.display = cur > 0 ? 'block' : 'none';
+  document.getElementById('btnNx').textContent = cur === QS.length - 1 ? 'See My Results' : 'Next';
+}
+
+function pick(val, el) {
+  document.querySelectorAll('.opt').forEach(function(b) { b.classList.remove('on'); });
+  el.classList.add('on');
+  sel = val;
+  answers[cur] = val;
+}
+
+function goNext() {
+  if (!sel && !answers[cur]) { showToast('Please pick one option'); return; }
+  if (cur < QS.length - 1) { cur++; sel = answers[cur] || null; renderQ(); }
+  else buildResults();
+}
+
+function goBack() { if (cur > 0) { cur--; sel = answers[cur] || null; renderQ(); } }
+
+function buildResults() {
+  var tally = {};
+  answers.forEach(function(a) { if (a) tally[a] = (tally[a] || 0) + 1; });
+  var top = 'tech';
+  var max = 0;
+  Object.keys(tally).forEach(function(k) { if (tally[k] > max) { max = tally[k]; top = k; } });
+  var p = PROFILES[top] || PROFILES.tech;
+
+  document.getElementById('rHero').style.background =
+    'radial-gradient(ellipse 80% 70% at 50% 30%, ' + p.color + '28 0%, transparent 70%), var(--surface)';
+  document.getElementById('rOrb1').style.background = p.color;
+  document.getElementById('rOrb2').style.background = p.color;
+  document.getElementById('pRing').textContent = p.icon;
+  document.getElementById('pRing').style.background = p.color + '22';
+  document.getElementById('pRing').style.border = '3px solid ' + p.color + '55';
+  document.getElementById('rTitle').textContent = p.title;
+  document.getElementById('rSub').textContent = p.sub;
+  document.getElementById('sBar').style.width = p.score + '%';
+  document.getElementById('sNum').textContent = p.score + '%';
+  document.getElementById('sNum').style.color = p.color;
+
+  var sHtml = '';
+  for (var i = 0; i < p.strengths.length; i++) {
+    var s = p.strengths[i];
+    sHtml += '<div class="scard" style="border-top-color:' + s.c + '">';
+    sHtml += '<div class="se">' + s.e + '</div>';
+    sHtml += '<div class="st2">' + s.t + '</div>';
+    sHtml += '<div class="sd">' + s.d + '</div></div>';
+  }
+  document.getElementById('sGrid').innerHTML = sHtml;
+
+  document.getElementById('rmIntro').textContent = p.intro;
+
+  var rmHtml = '';
+  for (var j = 0; j < p.roadmap.length; j++) {
+    var r = p.roadmap[j];
+    var tagsHtml = '';
+    for (var k = 0; k < r.tags.length; k++) {
+      tagsHtml += '<span class="rmtag">' + r.tags[k] + '</span>';
+    }
+    rmHtml += '<div class="rmitem">';
+    rmHtml += '<div class="rml"><div class="rmcirc" style="background:' + r.c + '">' + (j + 1) + '</div></div>';
+    rmHtml += '<div class="rmr">';
+    rmHtml += '<div class="rmw" style="color:' + r.c + '">' + r.w + '</div>';
+    rmHtml += '<div class="rmtitle">' + r.title + '</div>';
+    rmHtml += '<div class="rmdesc">' + r.desc + '</div>';
+    rmHtml += '<div class="rmtags">' + tagsHtml + '</div>';
+    rmHtml += '<div class="rmout">Outcome: ' + r.out + '</div>';
+    rmHtml += '</div></div>';
+  }
+  document.getElementById('rmList').innerHTML = rmHtml;
+
+  var jHtml = '';
+  for (var m = 0; m < p.jobs.length; m++) {
+    var jb = p.jobs[m];
+    var jtHtml = '';
+    for (var n = 0; n < jb.tags.length; n++) {
+      jtHtml += '<span class="jtag">' + jb.tags[n] + '</span>';
+    }
+    jHtml += '<div class="jcard">';
+    jHtml += '<div class="jtop"><span class="jico">' + jb.e + '</span>';
+    jHtml += '<span class="jmatch" style="background:' + jb.mc + '22;color:' + jb.mc + '">' + jb.match + '</span></div>';
+    jHtml += '<div class="jtitle">' + jb.t + '</div>';
+    jHtml += '<div class="jco">' + jb.co + '</div>';
+    jHtml += '<div class="jtags">' + jtHtml + '</div>';
+    jHtml += '<div class="jbot">';
+    jHtml += '<span class="jsal">&#8377;' + jb.sal + '</span>';
+    jHtml += '<button class="japply" style="background:' + jb.mg + '" onclick="showToast(\'Applied! Good luck\')">Apply Now</button>';
+    jHtml += '</div></div>';
+  }
+  document.getElementById('jGrid').innerHTML = jHtml;
+
+  show('p3');
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+</script>
+</body>
+</html>
